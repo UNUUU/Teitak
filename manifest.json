@@ -1,0 +1,28 @@
+{
+   "name": "邸宅",
+   "manifest_version": 2,
+   "version": "1.0.0",
+   "description": "好きな場所に邸宅をたてる拡張",
+   "browser_action": {
+       "default_icon": "image/Redmine++_icon_16x16.png",
+       "default_title": "邸宅設定",
+       "default_popup": "popup.html"
+   },
+   "content_scripts": [{
+       "matches": [ "http://*/*", "https://*/*"],
+       "css": ["teitaku.css"],
+       "js": ["jquery.min.js", "teitaku.js"]
+   }],
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "icons": {
+        "16": "image/Redmine++_icon_16x16.png",
+        "48": "image/Redmine++_icon_48x48.png",
+        "128": "image/Redmine++_icon_128x128.png"
+    },
+    "web_accessible_resources": [
+        "image/teitaku_in_once.gif",
+        "image/teitaku_fix.gif"
+    ]
+}
