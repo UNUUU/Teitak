@@ -1,11 +1,11 @@
 {
-   "name": "邸宅",
+   "name": "Teitak",
    "manifest_version": 2,
    "version": "1.0.0",
-   "description": "好きな場所に邸宅をたてる拡張",
+   "description": "どこにでも光柱を立てられるChrome拡張機能",
    "browser_action": {
-       "default_icon": "image/Redmine++_icon_16x16.png",
-       "default_title": "邸宅設定",
+       "default_icon": "image/teitak_icon_16x16.png",
+       "default_title": "Teitak",
        "default_popup": "popup.html"
    },
    "content_scripts": [{
@@ -17,9 +17,9 @@
         "scripts": ["background.js"]
     },
     "icons": {
-        "16": "image/Redmine++_icon_16x16.png",
-        "48": "image/Redmine++_icon_48x48.png",
-        "128": "image/Redmine++_icon_128x128.png"
+        "16": "image/teitak_icon_16x16.png",
+        "48": "image/teitak_icon_48x48.png",
+        "128": "image/teitak_icon_128x128.png"
     },
     "web_accessible_resources": [
         "image/teitaku_in_once.gif",

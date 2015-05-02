@@ -29,18 +29,38 @@ Teitaku.prototype.show = function() {
 
 chrome.extension.onRequest.addListener(
     function(request, sender, sendResponse) {
-        console.log(request.enable);
-        isEnable = request.enable == '1' ? true : false;
+        isEnable = request.enable;
         sendResponse({});
     }
 );
 
+chrome.runtime.sendMessage({}, function(response) {
+    isEnable = response.enable;
+});
+
+$('a').click(function(event) {
+    if (!isEnable) {
+        return true;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    var x = event.clientX;
+    var y = event.clientY + $('body').scrollTop();
+    var teitaku = new Teitaku(x, y);
+    teitaku.show();
+
+    return false;
+});
 
 $('body').click(function(event) {
     if (!isEnable) {
-        console.log('無効です')
         return;
     }
+
+    event.preventDefault();
+    event.stopPropagation();
 
     var x = event.clientX;
     var y = event.clientY + $('body').scrollTop();

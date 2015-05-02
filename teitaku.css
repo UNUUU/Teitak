@@ -5,3 +5,10 @@
     z-index: 99999999999999;
     display: none;
 }
+
+.wall {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 99999999999998;
+}
