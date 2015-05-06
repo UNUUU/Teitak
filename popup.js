@@ -1,43 +1,68 @@
-var getResource = function(resourceName) {
-    return chrome.extension.getURL(resourceName) + '?' + new Date().getTime();
-}
+(function() {
+  var Utility;
 
-var ENABLE_BUTTON_IMAGE = getResource('image/switch_on.png');
-var DISABLE_BUTTON_IMAGE = getResource('image/switch_off.png');
+  Utility = (function() {
+    function Utility() {}
 
-var getIsEnableFromImage = function(src) {
-    if (ENABLE_BUTTON_IMAGE == src) {
+    Utility.ResourceType = {
+      SWITCH_ON: 0,
+      SWITCH_OFF: 1
+    };
+
+    Utility.get = function(resourceType) {
+      var image, resourceUrl;
+      image = '';
+      switch (resourceType) {
+        case this.ResourceType.SWITCH_ON:
+          image = 'image/switch_on.png';
+          break;
+        case this.ResourceType.SWITCH_OFF:
+          image = 'image/switch_off.png';
+      }
+      resourceUrl = chrome.extension.getURL(image);
+      return resourceUrl;
+    };
+
+    Utility.getIsTouchEnableFromImage = function(image) {
+      if (this.get(this.ResourceType.SWITCH_ON) === image) {
         return true;
+      }
+      return false;
+    };
+
+    Utility.changeButton = function() {
+      var isTouchEnable;
+      isTouchEnable = this.getIsTouchEnableFromImage($('.toggle_button').attr('src'));
+      return Utility.setButton(!isTouchEnable);
+    };
+
+    Utility.setButton = function(isTouchEnable) {
+      var b;
+      b = $('.toggle_button');
+      if (isTouchEnable) {
+        return b.attr('src', this.get(this.ResourceType.SWITCH_ON));
+      } else {
+        return b.attr('src', this.get(this.ResourceType.SWITCH_OFF));
+      }
+    };
+
+    return Utility;
+
+  })();
+
+  $(function() {
+    var chromeBackground, isTouchEnable;
+    chromeBackground = chrome.extension.getBackgroundPage();
+    $('.toggle_button').click(function(event) {
+      Utility.changeButton();
+      return chromeBackground.saveSetting(Utility.getIsTouchEnableFromImage($('.toggle_button').attr('src')));
+    });
+    isTouchEnable = chromeBackground.getSetting();
+    if (isTouchEnable === null) {
+      chromeBackground.saveSetting(true);
+      isTouchEnable = chromeBackground.getSetting();
     }
-    return false;
-}
-
-var changeButton = function() {
-    var isEnable = getIsEnableFromImage($('.toggle_button').attr('src'));
-    setButton(!isEnable);
-}
-
-var setButton = function(isEnable) {
-    if (isEnable) {
-        $('.toggle_button').attr('src', ENABLE_BUTTON_IMAGE);
-    } else {
-        $('.toggle_button').attr('src', DISABLE_BUTTON_IMAGE);
-    }
-}
-
-$(function() {
-  var chromeBackground = chrome.extension.getBackgroundPage();
-  $('.toggle_button').click(function(event) {
-    changeButton();
-
-    var isEnable = getIsEnableFromImage($('.toggle_button').attr('src'));
-    chromeBackground.saveSetting(isEnable);
+    Utility.setButton(isTouchEnable);
   });
 
-  var isEnable = chromeBackground.getSetting();
-  if (isEnable === null) {
-    chromeBackground.saveSetting(true);
-    isEnable = chromeBackground.getSetting();
-  }
-  setButton(isEnable);
-});
+}).call(this);

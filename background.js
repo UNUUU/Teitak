@@ -1,41 +1,52 @@
-var saveSetting = function(isEnable) {
-    var enable = 0;
+(function() {
+  var sendSetting;
+
+  this.saveSetting = function(isEnable) {
+    var enable;
+    enable = 'true';
     if (isEnable) {
-        enable = 1;
+      enable = 'true';
     } else {
-        enable = 0;
+      enable = 'false';
     }
     localStorage.setItem('teitaku_enable', enable);
-
     sendSetting(getSetting());
-}
+  };
 
-var getSetting = function() {
-    var enable = localStorage.getItem('teitaku_enable');
-    var isEnable = false;
-    if (enable == 1) {
-        isEnable = true;
+  this.getSetting = function() {
+    var enable, isEnable;
+    enable = localStorage.getItem('teitaku_enable');
+    isEnable = false;
+    if (enable === 'true') {
+      isEnable = true;
     } else {
-        isEnable = false;
+      isEnable = false;
     }
     return isEnable;
-}
+  };
 
-var sendSetting = function(isEnable) {
-    chrome.windows.getAll({populate: true}, function(windows) {
-        for (var w in windows) {
-            var tabs = windows[w].tabs;
-            for (var t in tabs) {
-                chrome.tabs.sendRequest(tabs[t].id, {enable: isEnable}, function(response) {
-                                        });
-            }
+  sendSetting = function(isEnable) {
+    return chrome.windows.getAll({
+      populate: true
+    }, function(windows) {
+      var key, t, tabs;
+      for (key in windows) {
+        tabs = windows[key].tabs;
+        for (t in tabs) {
+          chrome.tabs.sendRequest(tabs[t].id, {
+            enable: isEnable
+          }, function(response) {});
         }
+      }
     });
-}
+  };
 
-chrome.runtime.onMessage.addListener(
-function(request, sender, sendResponse) {
-    sendResponse({enable: getSetting()});
-});
+  chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    sendResponse({
+      enable: getSetting()
+    });
+  });
 
-sendSetting(getSetting());
+  sendSetting(getSetting());
+
+}).call(this);

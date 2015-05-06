@@ -1,7 +1,7 @@
 {
    "name": "Teitak",
    "manifest_version": 2,
-   "version": "1.0.0",
+   "version": "1.0.1",
    "description": "どこにでも光柱を立てられるChrome拡張機能",
    "browser_action": {
        "default_icon": "image/teitak_icon_16x16.png",
